@@ -1265,16 +1265,6 @@ impl<K: Ord + Debug, V> RBTree<K, V> {
 
 mod tests {
     use super::RBTree;
-    #[test]
-    fn it_works() {
-        use std::collections::HashMap;
-        let mut a = HashMap::new();
-        a.insert(1, "a");
-        let b = a.clone();
-        a.clear();
-        assert!(a.is_empty());
-        assert!(!b.is_empty());
-    }
 
     #[test]
     fn test_insert() {
