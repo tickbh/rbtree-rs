@@ -14,7 +14,6 @@ use std::iter::{IntoIterator, FromIterator};
 use std::marker;
 use std::mem;
 use std::ops::Index;
-use std::borrow::Borrow;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum Color {
