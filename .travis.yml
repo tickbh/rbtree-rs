@@ -7,9 +7,9 @@ rust:
 - stable
 
 script:
-- travis-cargo build
-- travis-cargo test
-- travis-cargo doc
+- cargo build
+- cargo test
+- cargo doc
 
 after_success:
 
