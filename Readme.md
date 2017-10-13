@@ -1,4 +1,4 @@
-intrusive-collections
+rbtree for rust
 =====================
 
 [![Build Status](https://travis-ci.org/tickbh/rbtree-rs.svg?branch=master)](https://travis-ci.org/tickbh/rbtree-rs) [![Crates.io](https://img.shields.io/crates/v/rbtree.svg)](https://crates.io/crates/rbtree)
