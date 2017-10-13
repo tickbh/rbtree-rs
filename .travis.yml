@@ -1,0 +1,17 @@
+language: rust
+sudo: false
+
+rust:
+- nightly
+- beta
+- stable
+
+script:
+- travis-cargo build
+- travis-cargo test
+- travis-cargo doc
+
+after_success:
+
+notifications:
+email: false

@@ -719,40 +719,6 @@ impl<K: Ord + Debug, V> RBTree<K, V> {
         self.root.is_null()
     }
 
-    #[inline]
-    fn insert_root(&mut self, mut new: NodePtr<K, V>) {
-        new.set_black_color();
-        self.root = new;
-        self.len += 1;
-    }
-
-    #[inline]
-    unsafe fn insert_value(&mut self, node: &mut NodePtr<K, V>) {
-        let mut temp = self.root;
-        let mut temp_left = false;
-        loop {
-            let (next, is_left) = match node.cmp(&&mut temp) {
-                Ordering::Less => (temp.left(), true),
-                _ => (temp.right(), false),
-            };
-            if next.is_null() {
-                break;
-            }
-            temp_left = is_left;
-            temp = next;
-        }
-
-        if temp_left {
-            temp.set_left(*node);
-        } else {
-            temp.set_right(*node);
-        }
-
-        self.len += 1;
-        node.set_parent(temp);
-        node.set_red_color();
-    }
-
     /*
      * 对红黑树的节点(x)进行左旋转
      *
@@ -859,9 +825,8 @@ impl<K: Ord + Debug, V> RBTree<K, V> {
 
                 // Case 2条件：叔叔是黑色，且当前节点是右孩子
                 if parent.right() == node {
-                    let mut temp;
                     self.left_rotate(parent);
-                    temp = parent;
+                    let temp = parent;
                     parent = node;
                     node = temp;
                 }
@@ -883,9 +848,8 @@ impl<K: Ord + Debug, V> RBTree<K, V> {
 
                 // Case 2条件：叔叔是黑色，且当前节点是右孩子
                 if parent.left() == node {
-                    let mut temp;
                     self.right_rotate(parent);
-                    temp = parent;
+                    let temp = parent;
                     parent = node;
                     node = temp;
                 }
