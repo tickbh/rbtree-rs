@@ -2,5 +2,12 @@
 name = "rbtree"
 version = "0.1.0"
 authors = ["tickbh <tickdream125@hotmail.com>"]
+description = "the rbtree for Rust"
+license = "Apache-2.0/MIT"
+documentation = "https://github.com/tickbh/rbtree-rs"
+repository = "https://github.com/tickbh/rbtree-rs"
+readme = "README.md"
+keywords = ["HashMap", "RBTree", "rbtree"]
+categories = ["", ""]
 
-[dependencies]
+[dev-dependencies]
