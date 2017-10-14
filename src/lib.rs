@@ -277,6 +277,7 @@ impl<K: Ord + Clone, V: Clone> NodePtr<K, V> {
 
 /// # Examples
 /// ```rust
+/// use rbtree::RBTree;
 /// // type inference lets us omit an explicit type signature (which
 /// // would be `RBTree<&str, &str>` in this example).
 /// let mut book_reviews = RBTree::new();
@@ -315,14 +316,16 @@ impl<K: Ord + Clone, V: Clone> NodePtr<K, V> {
 /// book_reviews.print_tree();
 /// ```
 ///
-// // A `RBTree` with fixed list of elements can be initialized from an array:
-///
+/// // A `RBTree` with fixed list of elements can be initialized from an array:
+///  ```
+/// use rbtree::RBTree;
 ///  let timber_resources: RBTree<&str, i32> =
 ///  [("Norway", 100),
 ///   ("Denmark", 50),
 ///   ("Iceland", 10)]
 ///   .iter().cloned().collect();
 ///  // use the values stored in rbtree
+///  ```
 pub struct RBTree<K: Ord, V> {
     root: NodePtr<K, V>,
     len: usize,
@@ -450,6 +453,17 @@ impl<K: Ord, V> Extend<(K, V)> for RBTree<K, V> {
 }
 
 /// provide the rbtree all keys
+/// # Examples
+/// ```
+/// use rbtree::RBTree;
+/// let mut m = RBTree::new();
+/// for i in 1..6 {
+///     m.insert(i, i);
+/// }
+/// let vec = vec![1, 2, 3, 4, 5];
+/// let key_vec: Vec<_> = m.keys().cloned().collect();
+/// assert_eq!(vec, key_vec);
+/// ```
 pub struct Keys<'a, K: Ord + 'a, V: 'a> {
     inner: Iter<'a, K, V>,
 }
@@ -480,7 +494,19 @@ impl<'a, K: Ord, V> Iterator for Keys<'a, K, V> {
     }
 }
 
-/// provide the rbtree all value
+/// provide the rbtree all values order by key 
+/// # Examples
+/// ```
+/// use rbtree::RBTree;
+/// let mut m = RBTree::new();
+/// m.insert(2, 5);
+/// m.insert(1, 6);
+/// m.insert(3, 8);
+/// m.insert(4, 9);
+/// let vec = vec![6, 5, 8, 9];
+/// let key_vec: Vec<_> = m.values().cloned().collect();
+/// assert_eq!(vec, key_vec);
+/// ```
 pub struct Values<'a, K: 'a + Ord, V: 'a> {
     inner: Iter<'a, K, V>,
 }
@@ -512,7 +538,22 @@ impl<'a, K: Ord, V> Iterator for Values<'a, K, V> {
     }
 }
 
-/// provide the rbtree all value and it can be modify
+/// provide the rbtree all values and it can be modify
+/// # Examples
+/// ```
+/// use rbtree::RBTree;
+/// let mut m = RBTree::new();
+/// for i in 0..32 {
+///     m.insert(i, i);
+/// }
+/// assert_eq!(m.len(), 32);
+/// for v in m.values_mut() {
+///     *v *= 2;
+/// }
+/// for i in 0..32 {
+///     assert_eq!(m.get(&i).unwrap(), &(i * 2));
+/// }
+/// ```
 pub struct ValuesMut<'a, K: 'a + Ord, V: 'a> {
     inner: IterMut<'a, K, V>,
 }
@@ -529,7 +570,6 @@ impl<'a, K: Ord + Debug, V: Debug> fmt::Debug for ValuesMut<'a, K, V> {
     }
 }
 
-
 impl<'a, K: Ord, V> Iterator for ValuesMut<'a, K, V> {
     type Item = &'a mut V;
 
@@ -544,6 +584,7 @@ impl<'a, K: Ord, V> Iterator for ValuesMut<'a, K, V> {
     }
 }
 
+/// Convert RBTree to iter, move out the tree.
 pub struct IntoIter<K: Ord, V> {
     head: NodePtr<K, V>,
     tail: NodePtr<K, V>,
@@ -603,6 +644,22 @@ impl<K: Ord, V> DoubleEndedIterator for IntoIter<K, V> {
     }
 }
 
+/// provide iter ref for RBTree
+/// # Examples
+/// ```
+/// use rbtree::RBTree;
+/// let mut m = RBTree::new();
+/// for i in 0..32 {
+///     m.insert(i, i * 2);
+/// }
+/// assert_eq!(m.len(), 32);
+/// let mut observed: u32 = 0;
+/// for (k, v) in m.iter() {
+///     assert_eq!(*v, *k * 2);
+///     observed |= 1 << *k;
+/// }
+/// assert_eq!(observed, 0xFFFF_FFFF);
+/// ```
 pub struct Iter<'a, K: Ord + 'a, V: 'a> {
     head: NodePtr<K, V>,
     tail: NodePtr<K, V>,
@@ -663,7 +720,22 @@ impl<'a, K: Ord + 'a, V: 'a> DoubleEndedIterator for Iter<'a, K, V> {
     }
 }
 
-
+/// provide iter mut ref for RBTree
+/// # Examples
+/// ```
+/// use rbtree::RBTree;
+/// let mut m = RBTree::new();
+/// for i in 0..32 {
+///     m.insert(i, i);
+/// }
+/// assert_eq!(m.len(), 32);
+/// for (_, v) in m.iter_mut() {
+///     *v *= 2;
+/// }
+/// for i in 0..32 {
+///     assert_eq!(m.get(&i).unwrap(), &(i * 2));
+/// }
+/// ```
 pub struct IterMut<'a, K: Ord + 'a, V: 'a> {
     head: NodePtr<K, V>,
     tail: NodePtr<K, V>,
@@ -840,6 +912,18 @@ impl<K: Ord, V> RBTree<K, V> {
         node.set_parent(temp.clone());
     }
 
+    /// replace value if key exist, if not exist insert it.
+    /// # Examples
+    /// ```
+    /// use rbtree::RBTree;
+    /// let mut m = RBTree::new();
+    /// assert_eq!(m.len(), 0);
+    /// m.insert(2, 4);
+    /// assert_eq!(m.len(), 1);
+    /// assert_eq!(m.replace_or_insert(2, 6).unwrap(), 4);
+    /// assert_eq!(m.len(), 1);
+    /// assert_eq!(*m.get(&2).unwrap(), 6);
+    /// ```
     pub fn replace_or_insert(&mut self, k: K, mut v: V) -> Option<V> {
         let node = self.find_node(&k);
         if node.is_null() {
