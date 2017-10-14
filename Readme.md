@@ -34,7 +34,7 @@ assert_eq!(*m.get(&2).unwrap(), 4);
 ```
 
 ## Bench
-bench code in ./examples/bench.rs, you can run command
+bench code in ./examples/bench.rs, you can run command, in cpu i7-6700HQ, 2.60GHz
 ```txt
 cargo run --release --example bench
 ```
