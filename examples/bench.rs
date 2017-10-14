@@ -16,6 +16,10 @@ fn test_insert(repeat: u64, insert: u64) {
     let mut get_max = 0;
     let mut get_min = ::std::u64::MAX;
 
+    let mut remove_sum = 0;
+    let mut remove_max = 0;
+    let mut remove_min = ::std::u64::MAX;
+
 
     for _ in 0..repeat {
         let now = Instant::now();
@@ -37,20 +41,34 @@ fn test_insert(repeat: u64, insert: u64) {
         get_sum += cost;
         get_max = cmp::max(cost, get_max);
         get_min = cmp::min(cost, get_min);
+
+
+        let now = Instant::now();
+        assert_eq!(a.remove(&20).unwrap(), 40);
+        let new_now = Instant::now();
+        let cost = duration_to_num(new_now.duration_since(now));
+        remove_sum += cost;
+        remove_max = cmp::max(cost, remove_max);
+        remove_min = cmp::min(cost, remove_min);
     }
 
-    println!("All Test Repeat: {}, All Insert Num: {}, Max Cost: {}us, Min Cost: {}us, Aver Cost: {}us", 
-            repeat, 
-            insert,
+    println!("-----------All Test Repeat: {}, All Tree Num: {}-------------------", repeat, insert);
+    println!("Insert Test,           Max Cost: {}us, Min Cost: {}us, Aver Cost: {}us", 
             max / 1000,
             min / 1000,
             sum / 1000 / repeat);
 
-    println!("Get data by key=20 From Tree Num: {}, Max Cost: {}ns, Min Cost: {}ns, Aver Cost: {}ns", 
-            insert,
+    println!("Get data by key=20,    Max Cost: {}ns, Min Cost: {}ns, Aver Cost: {}ns", 
             get_max,
             get_min,
             get_sum / repeat);
+
+    println!("Remove data by key=20, Max Cost: {}ns, Min Cost: {}ns, Aver Cost: {}ns", 
+            remove_max,
+            remove_min,
+            remove_sum / repeat);
+
+    println!("-----------End Tree Test----------------------------------------------\n");
 
 }
 
@@ -59,4 +77,5 @@ fn main() {
     test_insert(10, 10000);
     test_insert(10, 100000);
     test_insert(10, 1000000);
+    test_insert(10, 10000000);
 }

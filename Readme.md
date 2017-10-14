@@ -39,14 +39,35 @@ bench code in ./examples/bench.rs, you can run command
 cargo run --release --example bench
 ```
 ```txt
-All Test Repeat: 10, All Insert Num: 1000, Max Cost: 304us, Min Cost: 106us, Aver Cost: 147us
-Get data by key=20 From Tree Num: 1000, Max Cost: 395ns, Min Cost: 0ns, Aver Cost: 158ns
-All Test Repeat: 10, All Insert Num: 10000, Max Cost: 1738us, Min Cost: 1463us, Aver Cost: 1621us
-Get data by key=20 From Tree Num: 10000, Max Cost: 1185ns, Min Cost: 395ns, Aver Cost: 592ns
-All Test Repeat: 10, All Insert Num: 100000, Max Cost: 25048us, Min Cost: 19115us, Aver Cost: 21351us
-Get data by key=20 From Tree Num: 100000, Max Cost: 1975ns, Min Cost: 1185ns, Aver Cost: 1461ns
-All Test Repeat: 10, All Insert Num: 1000000, Max Cost: 283113us, Min Cost: 250630us, Aver Cost: 262112us
-Get data by key=20 From Tree Num: 1000000, Max Cost: 2765ns, Min Cost: 1975ns, Aver Cost: 2054ns
+-----------All Test Repeat: 10, All Tree Num: 1000-------------------
+Insert Test,           Max Cost: 124us, Min Cost: 101us, Aver Cost: 106us
+Get data by key=20,    Max Cost: 395ns, Min Cost: 0ns, Aver Cost: 39ns
+Remove data by key=20, Max Cost: 790ns, Min Cost: 0ns, Aver Cost: 276ns
+-----------End Tree Test----------------------------------------------
+
+-----------All Test Repeat: 10, All Tree Num: 10000-------------------
+Insert Test,           Max Cost: 2255us, Min Cost: 1383us, Aver Cost: 1590us
+Get data by key=20,    Max Cost: 1975ns, Min Cost: 0ns, Aver Cost: 592ns
+Remove data by key=20, Max Cost: 2765ns, Min Cost: 395ns, Aver Cost: 829ns
+-----------End Tree Test----------------------------------------------
+
+-----------All Test Repeat: 10, All Tree Num: 100000-------------------
+Insert Test,           Max Cost: 21583us, Min Cost: 18904us, Aver Cost: 19859us
+Get data by key=20,    Max Cost: 16987ns, Min Cost: 1185ns, Aver Cost: 2883ns
+Remove data by key=20, Max Cost: 2370ns, Min Cost: 1185ns, Aver Cost: 1817ns
+-----------End Tree Test----------------------------------------------
+
+-----------All Test Repeat: 10, All Tree Num: 1000000-------------------
+Insert Test,           Max Cost: 273758us, Min Cost: 249229us, Aver Cost: 257955us
+Get data by key=20,    Max Cost: 4345ns, Min Cost: 1580ns, Aver Cost: 2409ns
+Remove data by key=20, Max Cost: 7506ns, Min Cost: 1975ns, Aver Cost: 2923ns
+-----------End Tree Test----------------------------------------------
+
+-----------All Test Repeat: 10, All Tree Num: 10000000-------------------
+Insert Test,           Max Cost: 3345163us, Min Cost: 3118450us, Aver Cost: 3221181us
+Get data by key=20,    Max Cost: 11456ns, Min Cost: 2370ns, Aver Cost: 3831ns
+Remove data by key=20, Max Cost: 9086ns, Min Cost: 2370ns, Aver Cost: 3594ns
+-----------End Tree Test----------------------------------------------
 ```
 
 ## License
