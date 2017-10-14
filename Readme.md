@@ -33,6 +33,22 @@ assert_eq!(*m.get(&1).unwrap(), 2);
 assert_eq!(*m.get(&2).unwrap(), 4);
 ```
 
+## Bench
+bench code in ./examples/bench.rs, you can run command
+```txt
+cargo run --release --example bench
+```
+```txt
+All Test Repeat: 10, All Insert Num: 1000, Max Cost: 304us, Min Cost: 106us, Aver Cost: 147us
+Get data by key=20 From Tree Num: 1000, Max Cost: 395ns, Min Cost: 0ns, Aver Cost: 158ns
+All Test Repeat: 10, All Insert Num: 10000, Max Cost: 1738us, Min Cost: 1463us, Aver Cost: 1621us
+Get data by key=20 From Tree Num: 10000, Max Cost: 1185ns, Min Cost: 395ns, Aver Cost: 592ns
+All Test Repeat: 10, All Insert Num: 100000, Max Cost: 25048us, Min Cost: 19115us, Aver Cost: 21351us
+Get data by key=20 From Tree Num: 100000, Max Cost: 1975ns, Min Cost: 1185ns, Aver Cost: 1461ns
+All Test Repeat: 10, All Insert Num: 1000000, Max Cost: 283113us, Min Cost: 250630us, Aver Cost: 262112us
+Get data by key=20 From Tree Num: 1000000, Max Cost: 2765ns, Min Cost: 1975ns, Aver Cost: 2054ns
+```
+
 ## License
 
 Licensed under either of

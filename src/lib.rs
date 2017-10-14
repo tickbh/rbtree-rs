@@ -494,7 +494,7 @@ impl<'a, K: Ord, V> Iterator for Keys<'a, K, V> {
     }
 }
 
-/// provide the rbtree all values order by key 
+/// provide the rbtree all values order by key
 /// # Examples
 /// ```
 /// use rbtree::RBTree;
@@ -1730,5 +1730,4 @@ mod tests {
         assert_eq!(a[&2], "two");
         assert_eq!(a[&3], "three");
     }
-
 }

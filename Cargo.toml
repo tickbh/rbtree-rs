@@ -1,6 +1,6 @@
 [package]
 name = "rbtree"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["tickbh <tickdream125@hotmail.com>"]
 description = "the rbtree for Rust"
 license = "Apache-2.0/MIT"
@@ -8,6 +8,5 @@ documentation = "https://docs.rs/rbtree"
 repository = "https://github.com/tickbh/rbtree-rs"
 readme = "README.md"
 keywords = ["HashMap", "RBTree", "rbtree"]
-categories = ["", ""]
 
 [dev-dependencies]
