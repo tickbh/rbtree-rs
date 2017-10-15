@@ -1081,20 +1081,36 @@ impl<K: Ord, V> RBTree<K, V> {
         }
     }
 
-    pub fn first_value(&mut self) -> Option<&V> {
+    pub fn get_first(&self) -> Option<(&K, &V)> {
         let first = self.first_child();
         if first.is_null() {
             return None;
         }
-        unsafe { Some(&(*first.0).value) }
+        unsafe { Some((&(*first.0).key, &(*first.0).value)) }
     }
 
-    pub fn last_value(&mut self) -> Option<&V> {
+    pub fn get_last(&self) -> Option<(&K, &V)> {
         let last = self.last_child();
         if last.is_null() {
             return None;
         }
-        unsafe { Some(&(*last.0).value) }
+        unsafe { Some((&(*last.0).key, &(*last.0).value)) }
+    }
+
+    pub fn pop_first(&mut self) -> Option<(K, V)> {
+        let first = self.first_child();
+        if first.is_null() {
+            return None;
+        }
+        unsafe { Some(self.delete(first)) }
+    }
+
+    pub fn pop_last(&mut self) -> Option<(K, V)> {
+        let last = self.last_child();
+        if last.is_null() {
+            return None;
+        }
+        unsafe { Some(self.delete(last)) }
     }
 
     pub fn first_mut_value(&mut self) -> Option<&mut V> {
@@ -1168,7 +1184,7 @@ impl<K: Ord, V> RBTree<K, V> {
         if node.is_null() {
             return None;
         }
-        unsafe { Some(self.delete(node)) }
+        unsafe { Some(self.delete(node).1) }
     }
 
     unsafe fn delete_fixup(&mut self, mut node: NodePtr<K, V>, mut parent: NodePtr<K, V>) {
@@ -1242,11 +1258,10 @@ impl<K: Ord, V> RBTree<K, V> {
         node.set_black_color();
     }
 
-    unsafe fn delete(&mut self, node: NodePtr<K, V>) -> V {
+    unsafe fn delete(&mut self, node: NodePtr<K, V>) -> (K, V) {
         let mut child;
         let mut parent;
         let color;
-        let value;
 
         self.len -= 1;
         // 被删除节点的"左右孩子都不为空"的情况。
@@ -1290,8 +1305,7 @@ impl<K: Ord, V> RBTree<K, V> {
             }
 
             let obj = Box::from_raw(node.0);
-            value = obj.value;
-            return value;
+            return obj.pair();
         }
 
         if !node.left().is_null() {
@@ -1321,8 +1335,7 @@ impl<K: Ord, V> RBTree<K, V> {
         }
 
         let obj = Box::from_raw(node.0);
-        value = obj.value;
-        return value;
+        return obj.pair();
     }
 
     /// Return the keys iter
@@ -1528,9 +1541,16 @@ mod tests {
     #[test]
     fn test_pop() {
         let mut m = RBTree::new();
+        m.insert(2, 4);
         m.insert(1, 2);
-        assert_eq!(m.remove(&1), Some(2));
-        assert_eq!(m.remove(&1), None);
+        m.insert(3, 6);
+        assert_eq!(m.len(), 3);
+        assert_eq!(m.pop_first(), Some((1, 2)));
+        assert_eq!(m.len(), 2);
+        assert_eq!(m.pop_last(), Some((3, 6)));
+        assert_eq!(m.len(), 1);
+        assert_eq!(m.get_first(), Some((&2, &4)));
+        assert_eq!(m.get_last(), Some((&2, &4)));
     }
 
     #[test]
