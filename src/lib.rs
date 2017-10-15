@@ -147,6 +147,7 @@ impl<K: Ord, V> NodePtr<K, V> {
         self.parent().right() == *self
     }
 
+    #[inline]
     fn min_node(self) -> NodePtr<K, V> {
         let mut temp = self.clone();
         while !temp.left().is_null() {
@@ -155,6 +156,7 @@ impl<K: Ord, V> NodePtr<K, V> {
         return temp;
     }
 
+    #[inline]
     fn max_node(self) -> NodePtr<K, V> {
         let mut temp = self.clone();
         while !temp.right().is_null() {
@@ -163,6 +165,7 @@ impl<K: Ord, V> NodePtr<K, V> {
         return temp;
     }
 
+    #[inline]
     fn next(self) -> NodePtr<K, V> {
         if !self.right().is_null() {
             self.right().min_node()
@@ -180,6 +183,7 @@ impl<K: Ord, V> NodePtr<K, V> {
         }
     }
 
+    #[inline]
     fn prev(self) -> NodePtr<K, V> {
         if !self.left().is_null() {
             self.left().max_node()
@@ -924,6 +928,7 @@ impl<K: Ord, V> RBTree<K, V> {
     /// assert_eq!(m.len(), 1);
     /// assert_eq!(*m.get(&2).unwrap(), 6);
     /// ```
+    #[inline]
     pub fn replace_or_insert(&mut self, k: K, mut v: V) -> Option<V> {
         let node = self.find_node(&k);
         if node.is_null() {
@@ -938,6 +943,7 @@ impl<K: Ord, V> RBTree<K, V> {
         Some(v)
     }
 
+    #[inline]
     unsafe fn insert_fixup(&mut self, mut node: NodePtr<K, V>) {
         let mut parent;
         let mut gparent;
@@ -997,6 +1003,7 @@ impl<K: Ord, V> RBTree<K, V> {
         self.root.set_black_color();
     }
 
+    #[inline]
     pub fn insert(&mut self, k: K, v: V) {
         self.len += 1;
         let mut node = NodePtr::new(k, v);
@@ -1057,6 +1064,7 @@ impl<K: Ord, V> RBTree<K, V> {
         NodePtr::null()
     }
 
+    #[inline]
     fn first_child(&self) -> NodePtr<K, V> {
         if self.root.is_null() {
             NodePtr::null()
@@ -1069,6 +1077,7 @@ impl<K: Ord, V> RBTree<K, V> {
         }
     }
 
+    #[inline]
     fn last_child(&self) -> NodePtr<K, V> {
         if self.root.is_null() {
             NodePtr::null()
@@ -1081,6 +1090,7 @@ impl<K: Ord, V> RBTree<K, V> {
         }
     }
 
+    #[inline]
     pub fn get_first(&self) -> Option<(&K, &V)> {
         let first = self.first_child();
         if first.is_null() {
@@ -1089,6 +1099,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some((&(*first.0).key, &(*first.0).value)) }
     }
 
+    #[inline]
     pub fn get_last(&self) -> Option<(&K, &V)> {
         let last = self.last_child();
         if last.is_null() {
@@ -1097,6 +1108,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some((&(*last.0).key, &(*last.0).value)) }
     }
 
+    #[inline]
     pub fn pop_first(&mut self) -> Option<(K, V)> {
         let first = self.first_child();
         if first.is_null() {
@@ -1105,6 +1117,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some(self.delete(first)) }
     }
 
+    #[inline]
     pub fn pop_last(&mut self) -> Option<(K, V)> {
         let last = self.last_child();
         if last.is_null() {
@@ -1113,6 +1126,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some(self.delete(last)) }
     }
 
+    #[inline]
     pub fn get_first_mut(&mut self) -> Option<(&K, &mut V)> {
         let first = self.first_child();
         if first.is_null() {
@@ -1121,6 +1135,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some((&(*first.0).key, &mut (*first.0).value)) }
     }
 
+    #[inline]
     pub fn get_last_mut(&mut self) -> Option<(&K, &mut V)> {
         let last = self.last_child();
         if last.is_null() {
@@ -1129,6 +1144,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some((&(*last.0).key, &mut (*last.0).value)) }
     }
 
+    #[inline]
     pub fn get(&self, k: &K) -> Option<&V> {
         let node = self.find_node(k);
         if node.is_null() {
@@ -1138,6 +1154,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some(&(*node.0).value) }
     }
 
+    #[inline]
     pub fn get_mut(&mut self, k: &K) -> Option<&mut V> {
         let node = self.find_node(k);
         if node.is_null() {
@@ -1147,6 +1164,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some(&mut (*node.0).value) }
     }
 
+    #[inline]
     pub fn contains_key(&self, k: &K) -> bool {
         let node = self.find_node(k);
         if node.is_null() {
@@ -1179,6 +1197,7 @@ impl<K: Ord, V> RBTree<K, V> {
         self.root = NodePtr::null();
     }
 
+    #[inline]
     pub fn remove(&mut self, k: &K) -> Option<V> {
         let node = self.find_node(k);
         if node.is_null() {
@@ -1187,6 +1206,7 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some(self.delete(node).1) }
     }
 
+    #[inline]
     unsafe fn delete_fixup(&mut self, mut node: NodePtr<K, V>, mut parent: NodePtr<K, V>) {
         let mut other;
         while node != self.root && node.is_black_color() {
@@ -1258,6 +1278,7 @@ impl<K: Ord, V> RBTree<K, V> {
         node.set_black_color();
     }
 
+    #[inline]
     unsafe fn delete(&mut self, node: NodePtr<K, V>) -> (K, V) {
         let mut child;
         let mut parent;
@@ -1339,21 +1360,25 @@ impl<K: Ord, V> RBTree<K, V> {
     }
 
     /// Return the keys iter
+    #[inline]
     pub fn keys(&self) -> Keys<K, V> {
         Keys { inner: self.iter() }
     }
 
     /// Return the value iter
+    #[inline]
     pub fn values(&self) -> Values<K, V> {
         Values { inner: self.iter() }
     }
 
     /// Return the value iter mut
+    #[inline]
     pub fn values_mut(&mut self) -> ValuesMut<K, V> {
         ValuesMut { inner: self.iter_mut() }
     }
 
     /// Return the key and value iter
+    #[inline]
     pub fn iter(&self) -> Iter<K, V> {
         Iter {
             head: self.first_child(),
@@ -1364,6 +1389,7 @@ impl<K: Ord, V> RBTree<K, V> {
     }
 
     /// Return the key and mut value iter
+    #[inline]
     pub fn iter_mut(&mut self) -> IterMut<K, V> {
         IterMut {
             head: self.first_child(),
