@@ -1113,20 +1113,20 @@ impl<K: Ord, V> RBTree<K, V> {
         unsafe { Some(self.delete(last)) }
     }
 
-    pub fn first_mut_value(&mut self) -> Option<&mut V> {
+    pub fn get_first_mut(&mut self) -> Option<(&K, &mut V)> {
         let first = self.first_child();
         if first.is_null() {
             return None;
         }
-        unsafe { Some(&mut (*first.0).value) }
+        unsafe { Some((&(*first.0).key, &mut (*first.0).value)) }
     }
 
-    pub fn last_mut_value(&mut self) -> Option<&mut V> {
+    pub fn get_last_mut(&mut self) -> Option<(&K, &mut V)> {
         let last = self.last_child();
         if last.is_null() {
             return None;
         }
-        unsafe { Some(&mut (*last.0).value) }
+        unsafe { Some((&(*last.0).key, &mut (*last.0).value)) }
     }
 
     pub fn get(&self, k: &K) -> Option<&V> {
