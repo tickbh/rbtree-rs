@@ -616,8 +616,12 @@ impl<K: Ord, V> Iterator for IntoIter<K, V> {
         }
 
         let next = self.head.next();
-        let obj = unsafe { Box::from_raw(self.head.0) };
-        let (k, v) = obj.pair();
+        let (k, v) = unsafe {
+            (
+                core::ptr::read(&(*self.head.0).key),
+                core::ptr::read(&(*self.head.0).value),
+            )
+        };
         self.head = next;
         self.len -= 1;
         Some((k, v))
