@@ -7,13 +7,13 @@
 // except according to those terms.
 
 use std::cmp::Ord;
-use std::fmt::{self, Debug};
 use std::cmp::Ordering;
-use std::ptr;
-use std::iter::{IntoIterator, FromIterator};
+use std::fmt::{self, Debug};
+use std::iter::{FromIterator, IntoIterator};
 use std::marker;
 use std::mem;
 use std::ops::Index;
+use std::ptr;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 enum Color {
@@ -225,7 +225,6 @@ impl<K: Ord, V> NodePtr<K, V> {
         unsafe { (*self.0).right = right }
     }
 
-
     #[inline]
     fn parent(&self) -> NodePtr<K, V> {
         if self.is_null() {
@@ -412,9 +411,8 @@ where
             return false;
         }
 
-        self.iter().all(|(key, value)| {
-            other.get(key).map_or(false, |v| *value == *v)
-        })
+        self.iter()
+            .all(|(key, value)| other.get(key).map_or(false, |v| *value == *v))
     }
 }
 
@@ -436,7 +434,6 @@ where
         self.get(index).expect("no entry found for key")
     }
 }
-
 
 impl<K: Ord, V> FromIterator<(K, V)> for RBTree<K, V> {
     fn from_iter<T: IntoIterator<Item = (K, V)>>(iter: T) -> RBTree<K, V> {
@@ -474,7 +471,9 @@ pub struct Keys<'a, K: Ord + 'a, V: 'a> {
 
 impl<'a, K: Ord, V> Clone for Keys<'a, K, V> {
     fn clone(&self) -> Keys<'a, K, V> {
-        Keys { inner: self.inner.clone() }
+        Keys {
+            inner: self.inner.clone(),
+        }
     }
 }
 
@@ -517,7 +516,9 @@ pub struct Values<'a, K: 'a + Ord, V: 'a> {
 
 impl<'a, K: Ord, V> Clone for Values<'a, K, V> {
     fn clone(&self) -> Values<'a, K, V> {
-        Values { inner: self.inner.clone() }
+        Values {
+            inner: self.inner.clone(),
+        }
     }
 }
 
@@ -527,12 +528,11 @@ impl<'a, K: Ord + Debug, V: Debug> fmt::Debug for Values<'a, K, V> {
     }
 }
 
-
 impl<'a, K: Ord, V> Iterator for Values<'a, K, V> {
     type Item = &'a V;
 
     #[inline]
-    fn next(&mut self) -> Option<(&'a V)> {
+    fn next(&mut self) -> Option<&'a V> {
         self.inner.next().map(|(_, v)| v)
     }
 
@@ -564,7 +564,9 @@ pub struct ValuesMut<'a, K: 'a + Ord, V: 'a> {
 
 impl<'a, K: Ord, V> Clone for ValuesMut<'a, K, V> {
     fn clone(&self) -> ValuesMut<'a, K, V> {
-        ValuesMut { inner: self.inner.clone() }
+        ValuesMut {
+            inner: self.inner.clone(),
+        }
     }
 }
 
@@ -798,7 +800,6 @@ impl<'a, K: Ord + 'a, V: 'a> DoubleEndedIterator for IterMut<'a, K, V> {
         Some((k, v))
     }
 }
-
 
 impl<K: Ord, V> IntoIterator for RBTree<K, V> {
     type Item = (K, V);
@@ -1179,7 +1180,7 @@ impl<K: Ord, V> RBTree<K, V> {
             unsafe {
                 self.clear_recurse(current.left());
                 self.clear_recurse(current.right());
-                Box::from_raw(current.0);
+                let _ = Box::from_raw(current.0);
             }
         }
     }
@@ -1374,7 +1375,9 @@ impl<K: Ord, V> RBTree<K, V> {
     /// Return the value iter mut
     #[inline]
     pub fn values_mut(&mut self) -> ValuesMut<K, V> {
-        ValuesMut { inner: self.iter_mut() }
+        ValuesMut {
+            inner: self.iter_mut(),
+        }
     }
 
     /// Return the key and value iter
@@ -1428,7 +1431,6 @@ mod tests {
         assert_eq!(m.len(), 1);
         assert_eq!(*m.get(&2).unwrap(), 6);
     }
-
 
     #[test]
     fn test_clone() {
@@ -1775,5 +1777,20 @@ mod tests {
         assert_eq!(a[&1], "one");
         assert_eq!(a[&2], "two");
         assert_eq!(a[&3], "three");
+    }
+
+    #[test]
+    fn test_rev_iter() {
+        let mut a = RBTree::new();
+        a.insert(1, 1);
+        a.insert(2, 2);
+        a.insert(3, 3);
+
+        assert_eq!(a.len(), 3);
+        let mut cache = vec![];
+        for e in a.iter().rev() {
+            cache.push(e.0.clone());
+        }
+        assert_eq!(&cache, &vec![3, 2, 1]);
     }
 }
