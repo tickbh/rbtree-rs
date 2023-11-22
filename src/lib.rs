@@ -717,10 +717,6 @@ impl<'a, K: Ord + 'a, V: 'a> DoubleEndedIterator for Iter<'a, K, V> {
             return None;
         }
 
-        if self.tail == self.head {
-            return None;
-        }
-
         let (k, v) = unsafe { (&(*self.tail.0).key, &(*self.tail.0).value) };
         self.tail = self.tail.prev();
         self.len -= 1;
