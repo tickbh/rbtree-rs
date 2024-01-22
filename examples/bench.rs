@@ -77,5 +77,8 @@ fn main() {
     test_insert(10, 10000);
     test_insert(10, 100000);
     test_insert(10, 1000000);
-    test_insert(10, 10000000);
+    // test_insert(10, 10000000);
+    // test_insert(10, 100000000);
+    // test_insert(10, 1000000000);
+    // test_insert(10, 10000000000);
 }

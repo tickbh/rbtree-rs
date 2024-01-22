@@ -493,7 +493,7 @@ impl<'a, K: Ord, V> Iterator for Keys<'a, K, V> {
     type Item = &'a K;
 
     #[inline]
-    fn next(&mut self) -> Option<(&'a K)> {
+    fn next(&mut self) -> Option<&'a K> {
         self.inner.next().map(|(k, _)| k)
     }
 
@@ -586,7 +586,7 @@ impl<'a, K: Ord, V> Iterator for ValuesMut<'a, K, V> {
     type Item = &'a mut V;
 
     #[inline]
-    fn next(&mut self) -> Option<(&'a mut V)> {
+    fn next(&mut self) -> Option<&'a mut V> {
         self.inner.next().map(|(_, v)| v)
     }
 
@@ -1191,17 +1191,31 @@ impl<K: Ord, V> RBTree<K, V> {
         }
     }
 
+    /// clear all red back tree elements.
+    /// # Examples
+    /// ```
+    /// use rbtree::RBTree;
+    /// let mut m = RBTree::new();
+    /// for i in 0..6 {
+    ///     m.insert(i, i);
+    /// }
+    /// assert_eq!(m.len(), 6);
+    /// m.clear();
+    /// assert_eq!(m.len(), 0);
+    /// ```
     #[inline]
     pub fn clear(&mut self) {
         let root = self.root;
         self.root = NodePtr::null();
         self.clear_recurse(root);
+        self.len = 0;
     }
 
     /// Empties the `RBTree` without freeing objects in it.
     #[inline]
     fn fast_clear(&mut self) {
         self.root = NodePtr::null();
+        self.len = 0;
     }
 
     #[inline]
@@ -1409,6 +1423,7 @@ impl<K: Ord, V> RBTree<K, V> {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::RBTree;
 
